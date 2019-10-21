@@ -1,14 +1,14 @@
 // Write your JavaScript code here!
 
 window.addEventListener("load", function(){
-   let button = document.getElementById("formSubmit");
+   const button = document.getElementById("formSubmit");
    button.addEventListener("click", function(event){
       event.preventDefault();
 
-      let pilotName = document.querySelector("input[name=pilotName]");
-      let copilotName = document.querySelector("input[name=copilotName]");
-      let fuelLevel = document.querySelector("input[name=fuelLevel]");
-      let cargoMass = document.querySelector("input[name=cargoMass]");
+      const pilotName = document.querySelector("input[name=pilotName]");
+      const copilotName = document.querySelector("input[name=copilotName]");
+      const fuelLevel = document.querySelector("input[name=fuelLevel]");
+      const cargoMass = document.querySelector("input[name=cargoMass]");
       
    //Validating Form 
       if(pilotName.value === '' || copilotName.value === '' || fuelLevel.value === '' || cargoMass.value === ''){
@@ -40,7 +40,7 @@ window.addEventListener("load", function(){
          }
 
       //Updating Launch Checklist Items
-         let faultyItems = document.getElementById("faultyItems");
+         const faultyItems = document.getElementById("faultyItems");
          faultyItems.innerHTML = `
             <ol>
                <li id="pilotStatus">Pilot ${pilotName.value} Ready</li>
@@ -52,10 +52,12 @@ window.addEventListener("load", function(){
          faultyItems.style.visibility = 'visible'
 
       //Updating launch Checklist Heading 
-         let launchStatusHeading = document.getElementById("launchStatus");
+         const launchStatusHeading = document.getElementById("launchStatus");
          if(fuelReady && cargoReady){
             launchStatusHeading.innerHTML = `Shuttle is ready for launch.`
             launchStatusHeading.style.color = 'green'
+
+            getPlanetaryJson();
          }else{
             launchStatusHeading.innerHTML = `Shuttle is not ready for launch.`
             launchStatusHeading.style.color = "red"
@@ -63,6 +65,30 @@ window.addEventListener("load", function(){
       }
    })
 })
+
+
+function getPlanetaryJson(){
+   fetch('https://handlers.education.launchcode.org/static/planets.json').then(function(response){
+      response.json().then(function(json){
+        const num = Math.floor(Math.random() * Object.keys(json).length);
+        
+        const target = document.getElementById('missionTarget');
+        target.innerHTML = 
+           `
+           <h2>Mission Destination</h2>
+           <ol>
+              <li>Name: ${json[num].name}</li>
+              <li>Diameter: ${json[num].diameter}</li>
+              <li>Star: ${json[num].star}</li>
+              <li>Distance from Earth: ${json[num].distance}</li>
+              <li>Number of Moons: ${json[num].moons}</li>
+           </ol>
+           <img src="${json[num].image}">
+           `
+      })  
+  })
+}
+
 
 
 /* This block of code shows how to format the HTML once you fetch some planetary JSON!
